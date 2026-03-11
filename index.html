@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Rutina Total — Define tu Cuerpo</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f7f4f0;
+  --card: #ffffff;
+  --surface: #ede9e3;
+  --border: #ddd8d0;
+  --ink: #18120e;
+  --ink2: #6b5f55;
+  --ink3: #a89f97;
+  --red: #d94f2b;
+  --teal: #0f8a77;
+  --navy: #1d3d62;
+  --amber: #d4860a;
+  --nav-h: 72px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  min-height: 100vh;
+  padding-bottom: calc(var(--nav-h) + env(safe-area-inset-bottom) + 8px);
+  -webkit-font-smoothing: antialiased;
+  font-size: 16px;
+}
+.app-header {
+  background: var(--ink);
+  padding: 3.5rem 1.5rem 0;
+  position: relative; overflow: hidden;
+}
+.app-header::after {
+  content: ''; position: absolute;
+  top: -80px; right: -80px;
+  width: 260px; height: 260px;
+  background: radial-gradient(circle, rgba(217,79,43,0.15) 0%, transparent 65%);
+  pointer-events: none;
+}
+.pill-tag {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.13);
+  border-radius: 100px; padding: 0.4rem 0.9rem;
+  font-size: 0.72rem; font-weight: 600;
+  letter-spacing: 0.09em; text-transform: uppercase;
+  color: rgba(255,255,255,0.45); margin-bottom: 1.1rem;
+}
+.pill-tag b { color: var(--red); font-weight: 700; }
+.app-header h1 {
+  font-family: 'Syne', sans-serif;
+  font-size: 3rem; font-weight: 800;
+  line-height: 0.93; letter-spacing: -0.02em; color: #fff;
+}
+.app-header h1 em { color: var(--red); font-style: normal; display: block; }
+.header-sub {
+  color: rgba(255,255,255,0.4);
+  font-size: 0.88rem; margin-top: 0.8rem; line-height: 1.6;
+}
+.stats-row {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  margin-top: 1.8rem;
+  border-top: 1px solid rgba(255,255,255,0.07);
+}
+.stat-box {
+  padding: 1rem 0.4rem; text-align: center;
+  border-right: 1px solid rgba(255,255,255,0.07);
+}
+.stat-box:last-child { border-right: none; }
+.stat-n { font-family: 'Syne', sans-serif; font-size: 1.6rem; font-weight: 800; color: var(--red); line-height: 1; }
+.stat-l { font-size: 0.6rem; color: rgba(255,255,255,0.28); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 0.25rem; line-height: 1.35; }
+
+/* BOTTOM NAV */
+.bottom-nav {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  height: calc(var(--nav-h) + env(safe-area-inset-bottom));
+  background: var(--card); border-top: 1.5px solid var(--border);
+  display: flex; align-items: flex-start; z-index: 100;
+  box-shadow: 0 -6px 24px rgba(0,0,0,0.09);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.nav-item {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 0.25rem; padding: 0.8rem 0 0.4rem;
+  cursor: pointer; border: none; background: none;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  position: relative; min-height: var(--nav-h);
+}
+.nav-item:active { background: var(--surface); }
+.nav-item::before {
+  content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+  width: 0; height: 3px; background: var(--red);
+  border-radius: 0 0 4px 4px; transition: width 0.2s;
+}
+.nav-item.active::before { width: 32px; }
+.nav-icon { font-size: 1.4rem; line-height: 1; transition: transform 0.15s; }
+.nav-item.active .nav-icon { transform: scale(1.1); }
+.nav-label { font-size: 0.6rem; font-weight: 700; letter-spacing: 0.03em; color: var(--ink3); text-transform: uppercase; transition: color 0.15s; }
+.nav-item.active .nav-label { color: var(--red); }
+
+/* PANELS */
+.panel { display: none; padding: 1.5rem 1.25rem 1rem; }
+.panel.active { display: block; }
+
+/* SECTION HEADER */
+.sec-head { margin-bottom: 1.25rem; }
+.sec-head h2 { font-family: 'Syne', sans-serif; font-size: 1.6rem; font-weight: 800; letter-spacing: -0.01em; }
+.sec-head p { font-size: 0.875rem; color: var(--ink2); margin-top: 0.35rem; line-height: 1.6; }
+
+/* ZONE HERO */
+.zone-hero {
+  display: flex; align-items: center; gap: 1rem;
+  background: var(--card); border-radius: 18px;
+  padding: 1.1rem 1.2rem; margin-bottom: 1.1rem;
+  border: 1.5px solid var(--border);
+}
+.zh-icon { width: 56px; height: 56px; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; flex-shrink: 0; }
+.ic-red { background: #fde8e3; }
+.ic-teal { background: #dcf5f0; }
+.ic-navy { background: #dde7f5; }
+.ic-amber { background: #fdf0d5; }
+.zh-text h3 { font-family: 'Syne', sans-serif; font-size: 1.15rem; font-weight: 800; }
+.zh-text p { font-size: 0.8rem; color: var(--ink2); margin-top: 0.25rem; line-height: 1.55; }
+.zh-chips { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-top: 0.55rem; }
+.chip { font-size: 0.62rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; padding: 0.25rem 0.65rem; border-radius: 5px; }
+.c-red { background: #fde8e3; color: var(--red); }
+.c-teal { background: #dcf5f0; color: var(--teal); }
+.c-navy { background: #dde7f5; color: var(--navy); }
+.c-amber { background: #fdf0d5; color: var(--amber); }
+.c-gray { background: var(--surface); color: var(--ink2); }
+
+/* WARMUP */
+.warmup { background: #dcf5f0; border-radius: 16px; padding: 1.1rem 1.2rem; margin-bottom: 1.1rem; }
+.wm-head { font-family: 'Syne', sans-serif; font-size: 0.68rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.14em; color: var(--teal); margin-bottom: 0.7rem; }
+.wm-list { display: flex; flex-direction: column; gap: 0.45rem; }
+.wm-item { font-size: 0.875rem; color: #1a5045; display: flex; align-items: center; gap: 0.55rem; font-weight: 500; }
+.wm-item::before { content: '›'; font-size: 1.2rem; color: var(--teal); line-height: 1; flex-shrink: 0; }
+
+/* EXERCISE CARD */
+.ex-card {
+  background: var(--card); border: 1.5px solid var(--border);
+  border-radius: 18px; margin-bottom: 0.85rem; overflow: hidden;
+  transition: box-shadow 0.2s;
+}
+.ex-card.open { box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+.ex-top {
+  display: flex; align-items: center; gap: 0.9rem;
+  padding: 1.1rem 1.1rem; cursor: pointer; user-select: none;
+}
+.ex-num { width: 44px; height: 44px; border-radius: 13px; display: flex; align-items: center; justify-content: center; font-family: 'Syne', sans-serif; font-size: 0.88rem; font-weight: 800; flex-shrink: 0; }
+.en-red { background: #fde8e3; color: var(--red); }
+.en-teal { background: #dcf5f0; color: var(--teal); }
+.en-navy { background: #dde7f5; color: var(--navy); }
+.en-amber { background: #fdf0d5; color: var(--amber); }
+.ex-info { flex: 1; min-width: 0; }
+.ex-name { font-family: 'Syne', sans-serif; font-size: 0.95rem; font-weight: 700; line-height: 1.3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ex-sub { font-size: 0.75rem; color: var(--ink3); margin-top: 0.2rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ex-pill { background: var(--surface); border-radius: 10px; padding: 0.4rem 0.7rem; text-align: center; flex-shrink: 0; min-width: 52px; }
+.ep-main { font-family: 'Syne', sans-serif; font-size: 0.92rem; font-weight: 800; color: var(--ink); line-height: 1; }
+.ep-label { font-size: 0.56rem; color: var(--ink3); text-transform: uppercase; letter-spacing: 0.05em; margin-top: 0.15rem; }
+.ex-arrow { font-size: 0.72rem; color: var(--ink3); transition: transform 0.25s; margin-left: 0.2rem; flex-shrink: 0; }
+.ex-card.open .ex-arrow { transform: rotate(180deg); }
+.ex-body { display: none; padding: 0 1.1rem 1.1rem; border-top: 1.5px solid var(--border); }
+.ex-card.open .ex-body { display: block; }
+.ex-how { font-size: 0.9rem; color: var(--ink2); line-height: 1.75; padding-top: 0.9rem; }
+.series-row { display: flex; gap: 0.55rem; flex-wrap: wrap; margin-top: 0.9rem; }
+.sp { background: var(--surface); border-radius: 9px; padding: 0.45rem 0.8rem; font-size: 0.8rem; font-weight: 700; color: var(--ink); }
+.sp small { display: block; font-size: 0.58rem; font-weight: 400; color: var(--ink3); text-transform: uppercase; letter-spacing: 0.05em; margin-top: 0.1rem; }
+.ex-tip { margin-top: 0.85rem; background: #fff8f0; border-left: 3px solid var(--red); padding: 0.7rem 0.9rem; border-radius: 0 12px 12px 0; font-size: 0.84rem; color: var(--ink2); line-height: 1.6; }
+.ex-tip strong { color: var(--ink); }
+.badge-nd { display: inline-flex; align-items: center; background: #dcf5f0; color: var(--teal); font-size: 0.58rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.15rem 0.45rem; border-radius: 4px; margin-left: 0.35rem; vertical-align: middle; }
+
+/* SECTION DIVIDER */
+.sec-div { font-family: 'Syne', sans-serif; font-size: 0.65rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.16em; padding: 0.6rem 0 0.7rem; display: flex; align-items: center; gap: 0.6rem; margin-top: 0.4rem; }
+.sec-div::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+/* CIRCUIT */
+.circuit { background: var(--ink); border-radius: 18px; padding: 1.2rem 1.25rem; margin-bottom: 1.1rem; color: #fff; }
+.ct-head { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 800; margin-bottom: 0.2rem; }
+.ct-meta { font-size: 0.72rem; color: rgba(255,255,255,0.38); text-transform: uppercase; letter-spacing: 0.09em; margin-bottom: 1rem; }
+.ct-items { display: flex; flex-direction: column; gap: 0.45rem; }
+.ct-row { display: flex; align-items: center; justify-content: space-between; background: rgba(255,255,255,0.07); padding: 0.8rem 0.9rem; border-radius: 11px; font-size: 0.9rem; }
+.ct-v { font-family: 'Syne', sans-serif; font-size: 0.92rem; font-weight: 800; color: var(--red); }
+.ct-note { font-size: 0.72rem; color: rgba(255,255,255,0.27); margin-top: 0.8rem; }
+
+/* NOTE BOX */
+.note-box { background: #fff8e8; border: 1.5px solid #f0d980; border-radius: 16px; padding: 1.1rem 1.2rem; margin-bottom: 1.1rem; font-size: 0.86rem; color: #5a4400; line-height: 1.65; }
+.note-box strong { color: #3a2a00; }
+
+/* PLAN WEEK — horizontal scroll */
+.week-scroll { display: flex; gap: 0.6rem; overflow-x: auto; scrollbar-width: none; padding-bottom: 0.5rem; margin-bottom: 1.2rem; }
+.week-scroll::-webkit-scrollbar { display: none; }
+.wd { flex-shrink: 0; background: var(--card); border: 1.5px solid var(--border); border-radius: 16px; padding: 0.9rem 0.75rem; text-align: center; width: 74px; }
+.wd-day { font-family: 'Syne', sans-serif; font-size: 0.65rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink3); margin-bottom: 0.4rem; }
+.wd-ico { font-size: 1.4rem; line-height: 1; }
+.wd-lbl { font-size: 0.62rem; color: var(--ink2); margin-top: 0.35rem; line-height: 1.35; font-weight: 600; }
+.wd.rest { opacity: 0.4; }
+.wd.d-brazos { border-top: 3px solid var(--red); }
+.wd.d-abdomen { border-top: 3px solid var(--teal); }
+.wd.d-pecho { border-top: 3px solid var(--navy); }
+
+/* ZONE CARDS */
+.zone-card { background: var(--card); border: 1.5px solid var(--border); border-radius: 18px; padding: 1.1rem 1.2rem; margin-bottom: 0.75rem; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 0.85rem; transition: background 0.15s; }
+.zone-card:active { background: var(--surface); }
+.zc-left { display: flex; align-items: center; gap: 0.9rem; }
+.zc-ico { width: 48px; height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; flex-shrink: 0; }
+.zc-title { font-family: 'Syne', sans-serif; font-size: 0.98rem; font-weight: 800; }
+.zc-sub { font-size: 0.75rem; color: var(--ink2); margin-top: 0.2rem; line-height: 1.4; }
+.zc-arrow { font-size: 1.1rem; color: var(--ink3); flex-shrink: 0; }
+
+/* PROGRESS */
+.prog-card { background: var(--card); border: 1.5px solid var(--border); border-radius: 18px; padding: 1.2rem; margin-top: 0.75rem; }
+.prog-title { font-family: 'Syne', sans-serif; font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.12em; color: var(--ink3); margin-bottom: 0.8rem; }
+.prog-row { display: flex; align-items: flex-start; gap: 0.8rem; padding: 0.8rem 0.9rem; background: var(--surface); border-radius: 12px; margin-bottom: 0.45rem; font-size: 0.86rem; }
+.prog-wk { font-family: 'Syne', sans-serif; font-size: 0.75rem; font-weight: 800; color: var(--red); min-width: 58px; line-height: 1.4; }
+.prog-txt { color: var(--ink2); line-height: 1.5; }
+
+/* PAPADA */
+.pa-card { background: var(--card); border: 1.5px solid var(--border); border-radius: 18px; padding: 1.1rem 1.2rem; margin-bottom: 0.85rem; }
+.pa-top { display: flex; align-items: center; gap: 0.8rem; margin-bottom: 0.6rem; }
+.pa-num { width: 36px; height: 36px; background: #dde7f5; color: var(--navy); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-family: 'Syne', sans-serif; font-size: 0.85rem; font-weight: 800; flex-shrink: 0; }
+.pa-title-txt { font-family: 'Syne', sans-serif; font-size: 0.95rem; font-weight: 700; line-height: 1.25; flex: 1; }
+.pa-reps-badge { background: var(--surface); border-radius: 9px; padding: 0.35rem 0.65rem; font-family: 'Syne', sans-serif; font-size: 0.82rem; font-weight: 800; color: var(--navy); flex-shrink: 0; }
+.pa-desc { font-size: 0.86rem; color: var(--ink2); line-height: 1.7; }
+.pa-tip { margin-top: 0.65rem; background: #dde7f5; border-radius: 10px; padding: 0.6rem 0.8rem; font-size: 0.8rem; color: var(--navy); line-height: 1.55; font-style: italic; }
+
+/* COMPLEMENTOS */
+.comp-list { background: var(--surface); border-radius: 16px; padding: 1.1rem 1.2rem; margin-top: 0.75rem; }
+.comp-title { font-family: 'Syne', sans-serif; font-size: 0.65rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.12em; color: var(--ink3); margin-bottom: 0.8rem; }
+.comp-row { display: flex; align-items: flex-start; gap: 0.65rem; font-size: 0.86rem; color: var(--ink2); line-height: 1.6; margin-bottom: 0.6rem; }
+.comp-row:last-child { margin-bottom: 0; }
+.comp-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--amber); flex-shrink: 0; margin-top: 0.5rem; }
+</style>
+</head>
+<body>
+
+<header class="app-header">
+  <div class="pill-tag">🏠 En Casa <b>·</b> Solo Mancuernas</div>
+  <h1>DEFINE<br><em>TU CUERPO</em></h1>
+  <p class="header-sub">Brazos, abdomen, pecho y papada. Mancuernas solo donde importan.</p>
+  <div class="stats-row">
+    <div class="stat-box"><div class="stat-n">5</div><div class="stat-l">Días/<br>sem</div></div>
+    <div class="stat-box"><div class="stat-n">45</div><div class="stat-l">Min/<br>día</div></div>
+    <div class="stat-box"><div class="stat-n">4</div><div class="stat-l">Zonas</div></div>
+    <div class="stat-box"><div class="stat-n">~480</div><div class="stat-l">Kcal/<br>día</div></div>
+  </div>
+</header>
+
+<!-- PLAN -->
+<div class="panel active" id="panel-plan">
+  <div class="sec-head"><h2>Plan Semanal</h2><p>Combinación óptima para quemar grasa y definir cada zona.</p></div>
+  <div class="week-scroll">
+    <div class="wd d-brazos"><div class="wd-day">Lun</div><div class="wd-ico">💪</div><div class="wd-lbl">Brazos</div></div>
+    <div class="wd d-abdomen"><div class="wd-day">Mar</div><div class="wd-ico">🔥</div><div class="wd-lbl">Abdomen</div></div>
+    <div class="wd d-pecho"><div class="wd-day">Mié</div><div class="wd-ico">🏋️</div><div class="wd-lbl">Pecho</div></div>
+    <div class="wd rest"><div class="wd-day">Jue</div><div class="wd-ico">😴</div><div class="wd-lbl">Descanso</div></div>
+    <div class="wd d-brazos"><div class="wd-day">Vie</div><div class="wd-ico">💪</div><div class="wd-lbl">Brazos</div></div>
+    <div class="wd d-abdomen"><div class="wd-day">Sáb</div><div class="wd-ico">⚡</div><div class="wd-lbl">Full Quema</div></div>
+    <div class="wd rest"><div class="wd-day">Dom</div><div class="wd-ico">🧘</div><div class="wd-lbl">Descanso</div></div>
+  </div>
+  <div class="note-box"><strong>⚠️ Sobre la papada:</strong> No existe ejercicio que queme grasa de una sola zona. Los ejercicios tonifican los músculos del cuello y mandíbula, pero la grasa baja con pérdida de peso general. Haz los ejercicios de papada <strong>diariamente</strong> — solo 5 minutos.</div>
+  <div class="zone-card" onclick="switchZone('brazos')">
+    <div class="zc-left"><div class="zc-ico ic-red">💪</div><div><div class="zc-title">Brazos Completos</div><div class="zc-sub">Bíceps · Tríceps · Hombros<br>Con mancuernas</div></div></div>
+    <div class="zc-arrow">›</div>
+  </div>
+  <div class="zone-card" onclick="switchZone('abdomen')">
+    <div class="zc-left"><div class="zc-ico ic-teal">🔥</div><div><div class="zc-title">Abdomen + Cardio</div><div class="zc-sub">Core superior · Oblicuos · HIIT<br>Mancuernas opcional</div></div></div>
+    <div class="zc-arrow">›</div>
+  </div>
+  <div class="zone-card" onclick="switchZone('pecho')">
+    <div class="zc-left"><div class="zc-ico ic-navy">🏋️</div><div><div class="zc-title">Pecho Definido</div><div class="zc-sub">Pectoral + grasa pecho<br>Sin banco necesario</div></div></div>
+    <div class="zc-arrow">›</div>
+  </div>
+  <div class="zone-card" onclick="switchZone('papada')">
+    <div class="zc-left"><div class="zc-ico ic-amber">✨</div><div><div class="zc-title">Reducir Papada</div><div class="zc-sub">Cuello · Mandíbula · Platisma<br>5 min diarios</div></div></div>
+    <div class="zc-arrow">›</div>
+  </div>
+  <div class="prog-card">
+    <div class="prog-title">📈 Progresión por Semanas</div>
+    <div class="prog-row"><div class="prog-wk">Sem 1–2</div><div class="prog-txt">Aprende la técnica. Peso ligero. 3 series por ejercicio.</div></div>
+    <div class="prog-row"><div class="prog-wk">Sem 3–4</div><div class="prog-txt">Aumenta +1 kg en mancuernas. Añade 1 serie extra.</div></div>
+    <div class="prog-row"><div class="prog-wk">Sem 5–6</div><div class="prog-txt">Reduce descanso a 45 seg. Más intensidad cardiovascular.</div></div>
+    <div class="prog-row"><div class="prog-wk">Sem 7–8</div><div class="prog-txt">Añade ejercicio extra en cada sesión. Peso máximo controlado.</div></div>
+  </div>
+</div>
+
+<!-- BRAZOS -->
+<div class="panel" id="panel-brazos">
+  <div class="zone-hero">
+    <div class="zh-icon ic-red">💪</div>
+    <div class="zh-text"><h3>Brazos Completos</h3><p>Bíceps, tríceps, antebrazo y hombros con mancuernas.</p>
+      <div class="zh-chips"><span class="chip c-red">Con Mancuernas</span><span class="chip c-navy">Tríceps</span><span class="chip c-gray">45 min</span></div>
+    </div>
+  </div>
+  <div class="warmup">
+    <div class="wm-head">⚡ Calentamiento — 4 min</div>
+    <div class="wm-list">
+      <div class="wm-item">Rotación de muñecas 30 seg</div>
+      <div class="wm-item">Círculos de brazos 30 seg</div>
+      <div class="wm-item">Estiramiento de bíceps 20 seg c/lado</div>
+      <div class="wm-item">Lagartijas lentas x 8</div>
+    </div>
+  </div>
+  <div class="sec-div" style="color:var(--red)">— Bíceps</div>
+  <div class="ex-card" onclick="toggleEx(this)">
+    <div class="ex-top">
+      <div class="ex-num en-red">B1</div>
+      <div class="ex-info"><div class="ex-name">Curl Alternado</div><div class="ex-sub">De pie · Mancuernas · Músculo principal</div></div>
+      <div class="ex-pill"><div class="ep-main">4×12</div><div class="ep-label">s×reps</div></div>
+      <div class="ex-arrow">▼</div>
+    </div>
+    <div class="ex-body">
+      <div class="ex-how">De pie, una mancuerna en cada mano con palmas hacia adelante. Sube una mancuerna doblando el codo hasta el hombro, baja lentamente y repite con el otro brazo. Codos pegados al cuerpo en todo momento.</div>
+      <div class="series-row"><div class="sp">4<small>Series</small></div><div class="sp">12<small>Reps c/lado</small></div><div class="sp">45 seg<small>Descanso</small></div></div>
+      <div class="ex-tip"><strong>Tip:</strong> Baja en 3 segundos — el descenso lento activa más fibras que la subida.</div>
+    </div>
+  </div>
+  <div class="ex-card" onclick="toggleEx(this)">
+    <div class="ex-top">
+      <div class="ex-num en-red">B2</div>
+      <div class="ex-info"><div class="ex-name">Curl Martillo</div><div class="ex-sub">De pie · Mancuernas · Braquial y antebrazo</div></div>
+      <div class="ex-pill"><div class="ep-main">3×12</div><div class="ep-label">s×reps</div></div>
+      <div class="ex-arrow">▼</div>
+    </div>
+    <div class="ex-body">
+      <div class="ex-how">Igual que el curl normal pero con las palmas mirando hacia adentro (como sosteniendo un martillo). Sube ambas mancuernas simultáneamente o alternado. Trabaja el braquial y el antebrazo dando grosor al brazo.</div>
+      <div class="series-row"><div class="sp">3<small>Series</small></div><div class="sp">12<small>Reps</small></div><div class="sp">45 seg<small>Descanso</small></div></div>
+      <div class="ex-tip"><strong>Tip:</strong> Da "anchura" al brazo que el curl normal no trabaja. No lo saltes.</div>
+    </div>
+  </div>
+  <div class="ex-card" onclick="toggleEx(this)">
+    <div class="ex-top">
+      <div class="ex-num en-red">B3</div>
+      <div class="ex-info"><div class="ex-name">Curl de Concentración</div><div class="ex-sub">Sentado · Mancuerna · Pico del bíceps</div></div>
+      <div class="ex-pill"><div class="ep-main">3×10</div><div class="ep-label">c/brazo</div></div>
+      <div class="ex-arrow">▼</div>
+    </div>
+    <div class="ex-body">
+      <div class="ex-how">Siéntate en una silla. Apoya el codo contra la cara interna del muslo. Sube la mancuerna girando la muñeca al final para apretar el bíceps. Baja lentamente sin soltarte.</div>
+      <div class="series-row"><div class="sp">3<small>Series</small></div><div class="sp">10<small>Reps c/brazo</small></div><div class="sp">40 seg<small>Descanso</small></div></div>
+      <div class="ex-tip"><strong>Tip:</strong> Crea el "pico" del bíceps — la contracción máxima al girar la muñeca es clave.</div>
+    </div>
+  </div>
+  <div class="sec-div" style="color:var(--navy)">— Tríceps</div>
+  <div class="ex-card" onclick="toggleEx(this)">
+    <div class="ex-top">
+      <div class="ex-num en-navy">T1</div>
+      <div class="ex-info"><div class="ex-name">Extensión sobre Cabeza</div><div class="ex-sub">De pie · Mancuerna · Cabeza larga</div></div>
+      <div class="ex-pill"><div class="ep-main">4×12</div><div class="ep-label">s×reps</div></div>
+      <div class="ex-arrow">▼</div>
+    </div>
+    <div class="ex-body">
+      <div class="ex-how">De pie, sostén una mancuerna con ambas manos sobre la cabeza. Dobla los codos bajando la mancuerna detrás de la nuca. Extiende hacia arriba. Los codos no se mueven — apuntan al techo todo el tiempo.</div>
+      <div class="series-row"><div class="sp">4<small>Series</small></div><div class="sp">12<small>Reps</small></div><div class="sp">45 seg<small>Descanso</small></div></div>
+      <div class="ex-tip"><strong>Tip:</strong> Trabaja la cabeza larga — la que da el aspecto de brazo grande y definido por detrás.</div>
+    </div>
+  </div>
+  <div class="ex-card" onclick="toggleEx(this)">
+    <div class="ex-top">
+      <div class="ex-num en-navy">T2</div>
+      <div class="ex-info"><div class="ex-name">Kickback de Tríceps</div><div class="ex-sub">Inclinado · Mancuerna · Definición</div></div>
+      <div class="ex-pill"><div class="ep-main">3×15</div><div class="ep-label">c/brazo</div></div>
+      <div class="ex-arrow">▼</div>
+    </div>
+    <div class="ex-body">
+      <div class="ex-how">Apoya una mano y rodilla en la silla. Codo del brazo trabajado a 90° pegado al cuerpo. Extiende el antebrazo hacia atrás hasta que el brazo quede completamente recto. Baja lento.</div>
+      <div class="series-row"><div class="sp">3<small>Series</small></div><div class="sp">15<small>Reps c/brazo</small></div><div class="sp">40 seg<small>Descanso</small></div></div>
+      <div class="ex-tip"><strong>Tip:</strong> Solo se mueve el antebrazo — el codo queda fijo. Eso es lo que hace el ejercicio efectivo.</div>
+    </div>
+  </div>
+  <div class="ex-card" onclick="toggleEx(this)">
+    <div class="ex-top">
+      <div class="ex-num en-navy">T3</div>
+      <div class="ex-info"><div class="ex-name">Fondos en Silla <span class="badge-nd">Sin mancuernas</span></div><div class="ex-sub">Con silla · Peso corporal</div></div>
+      <div class="ex-pill"><div class="ep-main">4×12</div><div class="ep-label">s×reps</div></div>
+      <div class="ex-arrow">▼</div>
+    </div>
+    <div class="ex-body">
+      <div class="ex-how">Manos en el borde de una silla, piernas estiradas. Baja doblando los codos hasta 90° y empuja hacia arriba. Espalda cerca de la silla todo el tiempo.</div>
+      <div class="series-row"><div class="sp">4<small>Series</small></div><div class="sp">12<small>Reps</small></div><div class="sp">45 seg<small>Descanso</small></div></div>
+      <div class="ex-tip"><strong>Tip:</strong> Para más difícil, eleva los pies en otra silla. Para más fácil, dobla las rodillas.</div>
+    </div>
+  </div>
+  <div class="sec-div" style="color:var(--amber)">— Hombros</div>
+  <div class="ex-card" onclick="toggleEx(this)">
+    <div class="ex-top">
+      <div class="ex-num en-amber">H1</div>
+      <div class="ex-info"><div class="ex-name">Elevaciones Laterales</div><div class="ex-sub">De pie · Mancuernas · Deltoides medial</div></div>
+      <div class="ex-pill"><div class="ep-main">3×15</div><div class="ep-label">s×reps</div></div>
+      <div class="ex-arrow">▼</div>
+    </div>
+    <div class="ex-body">
+      <div class="ex-how">De pie, mancuernas a los costados. Sube los brazos lateralmente hasta la altura del hombro (como alas), codos ligeramente doblados. Baja lento y sin balancearte.</div>
+      <div class="series-row"><div class="sp">3<small>Series</small></div><div class="sp">15<small>Reps</small></div><div class="sp">40 seg<small>Descanso</small></div></div>
+      <div class="ex-tip"><strong>Tip:</strong> Usa poco peso y hazlo perfecto. La técnica aquí vale más que el peso.</div>
+    </div>
+  </div>
+  <div class="ex-card" onclick="toggleEx(this)">
+    <div class="ex-top">
+      <div class="ex-num en-amber">H2</div>
+      <div class="ex-info"><div class="ex-name">Press de Hombros Sentado</div><div class="ex-sub">Sentado · Mancuernas · Deltoides anterior</div></div>
+      <div class="ex-pill"><div class="ep-main">3×12</div><div class="ep-label">s×reps</div></div>
+      <div class="ex-arrow">▼</div>
+    </div>
+    <div class="ex-body">
+      <div class="ex-how">Sentado con espalda recta. Mancuernas a la altura de los hombros, codos a 90°. Empuja hacia arriba hasta casi extender los brazos. Baja de forma controlada.</div>
+      <div class="series-row"><div class="sp">3<small>Series</small></div><div class="sp">12<small>Reps</small></div><div class="sp">50 seg<small>Descanso</small></div></div>
+      <div class="ex-tip"><strong>Tip:</strong> No arquees la espalda al subir. Si pasa, reduce el peso o apóyate en el respaldo.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ABDOMEN -->
+<div class="panel" id="panel-abdomen">
+  <div class="zone-hero">
+    <div class="zh-icon ic-teal">🔥</div>
+    <div class="zh-text"><h3>Abdomen + Cardio</h3><p>HIIT quemagrasa + core específico. Mancuernas en 2 ejercicios.</p>
+      <div class="zh-chips"><span class="chip c-teal">HIIT</span><span class="chip c-red">Core</span><span class="chip c-gray">50 min</span></div>
+    </div>
+  </div>
+  <div class="warmup">
+    <div class="wm-head">⚡ Calentamiento — 5 min</div>
+    <div class="wm-list">
+      <div class="wm-item">Marcha elevando rodillas 1 min</div>
+      <div class="wm-item">Rotación de tronco 30 seg</div>
+      <div class="wm-item">Estiramiento lateral 20 seg c/lado</div>
+      <div class="wm-item">Cat-Cow en 4 apoyos x 10</div>
+    </div>
+  </div>
+  <div class="circuit">
+    <div class="ct-head">🔄 Circuito HIIT Quemagrasa</div>
+    <div class="ct-meta">3 rondas · 40 seg ON / 20 seg OFF</div>
+    <div class="ct-items">
+      <div class="ct-row"><span>Burpees</span><span class="ct-v">40 SEG</span></div>
+      <div class="ct-row"><span>Mountain Climbers</span><span class="ct-v">40 SEG</span></div>
+      <div class="ct-row"><span>Saltos rodillas al pecho</span><span class="ct-v">40 SEG</span></div>
+      <div class="ct-row"><span>Sprint en el lugar</span><span class="ct-v">40 SEG</span></div>
+    </div>
+    <div class="ct-note">⏱ Descansa 90 seg entre rondas completas</div>
+  </div>
+  <div class="sec-div" style="color:var(--teal)">— Ejercicios de Core</div>
+  <div class="ex-card" onclick="toggleEx(this)">
+    <div class="ex-top">
+      <div class="ex-num en-teal">A1</div>
+      <div class="ex-info"><div class="ex-name">Crunch con Mancuerna</div><div class="ex-sub">Tumbado · Mancuerna · Abdomen superior</div></div>
+      <div class="ex-pill"><div class="ep-main">4×20</div><div class="ep-label">s×reps</div></div>
+      <div class="ex-arrow">▼</div>
+    </div>
+    <div class="ex-body">
+      <div class="ex-how">Acuéstate, rodillas dobladas. Sostén una mancuerna sobre el pecho. Sube el tronco hasta despegar los omóplatos. Baja sin dejar reposar la cabeza del todo.</div>
+      <div class="series-row"><div class="sp">4<small>Series</small></div><div class="sp">20<small>Reps</small></div><div class="sp">40 seg<small>Descanso</small></div></div>
+      <div class="ex-tip"><strong>Tip:</strong> Exhala al subir, inhala al bajar. El peso acelera la definición del abdomen superior.</div>
+    </div>
+  </div>
+  <div class="ex-card" onclick="toggleEx(this)">
+    <div class="ex-top">
+      <div class="ex-num en-teal">A2</div>
+      <div class="ex-info"><div class="ex-name">Russian Twist <span class="badge-nd">Opcional</span></div><div class="ex-sub">Sentado · Oblicuos · Cintura</div></div>
+      <div class="ex-pill"><div class="ep-main">4×20</div><div class="ep-label">s×reps</div></div>
+      <div class="ex-arrow">▼</div>
+    </div>
+    <div class="ex-body">
+      <div class="ex-how">Siéntate con rodillas dobladas, inclínate 45° atrás, pies levantados. Rota el tronco de lado a lado tocando el suelo con las manos o con una mancuerna.</div>
+      <div class="series-row"><div class="sp">4<small>Series</small></div><div class="sp">20<small>Reps totales</small></div><div class="sp">40 seg<small>Descanso</small></div></div>
+      <div class="ex-tip"><strong>Tip:</strong> El movimiento es de cintura, no de brazos. Con mancuerna añades resistencia extra.</div>
+    </div>
+  </div>
+  <div class="ex-card" onclick="toggleEx(this)">
+    <div class="ex-top">
+      <div class="ex-num en-teal">A3</div>
+      <div class="ex-info"><div class="ex-name">Elevación de Piernas <span class="badge-nd">Sin mancuernas</span></div><div class="ex-sub">Tumbado · Abdomen inferior</div></div>
+      <div class="ex-pill"><div class="ep-main">4×15</div><div class="ep-label">s×reps</div></div>
+      <div class="ex-arrow">▼</div>
+    </div>
+    <div class="ex-body">
+      <div class="ex-how">Acuéstate, manos bajo los glúteos. Piernas rectas: súbelas hasta 90° y bájalas lentamente sin tocar del todo el suelo. Zona lumbar pegada al piso en todo momento.</div>
+      <div class="series-row"><div class="sp">4<small>Series</small></div><div class="sp">15<small>Reps</small></div><div class="sp">45 seg<small>Descanso</small></div></div>
+      <div class="ex-tip"><strong>Tip:</strong> Si la espalda se arquea, dobla un poco las rodillas hasta fortalecer más el core.</div>
+    </div>
+  </div>
+  <div class="ex-card" onclick="toggleEx(this)">
+    <div class="ex-top">
+      <div class="ex-num en-teal">A4</div>
+      <div class="ex-info"><div class="ex-name">Bicicleta Lenta <span class="badge-nd">Sin mancuernas</span></div><div class="ex-sub">Tumbado · Todo el core</div></div>
+      <div class="ex-pill"><div class="ep-main">3×20</div><div class="ep-label">s×reps</div></div>
+      <div class="ex-arrow">▼</div>
+    </div>
+    <div class="ex-body">
+      <div class="ex-how">Manos detrás de la cabeza. Codo derecho hacia rodilla izquierda mientras extiendes la pierna derecha, y alterna. HAZLO LENTO — 2 segundos por lado con pausa de 1 segundo en cada cruce.</div>
+      <div class="series-row"><div class="sp">3<small>Series</small></div><div class="sp">20<small>Reps</small></div><div class="sp">40 seg<small>Descanso</small></div></div>
+      <div class="ex-tip"><strong>Tip:</strong> Lento = más efectivo. Activa oblicuos, recto y transverso al mismo tiempo.</div>
+    </div>
+  </div>
+  <div class="ex-card" onclick="toggleEx(this)">
+    <div class="ex-top">
+      <div class="ex-num en-teal">A5</div>
+      <div class="ex-info"><div class="ex-name">Plancha Abdominal <span class="badge-nd">Sin mancuernas</span></div><div class="ex-sub">Isométrico · Core completo</div></div>
+      <div class="ex-pill"><div class="ep-main">3×45s</div><div class="ep-label">mantener</div></div>
+      <div class="ex-arrow">▼</div>
+    </div>
+    <div class="ex-body">
+      <div class="ex-how">Antebrazos y puntillas en el suelo. Cuerpo recto como tabla. Aprieta abdomen, glúteos y muslos. No dejes caer ni subir las caderas. Respira normalmente.</div>
+      <div class="series-row"><div class="sp">3<small>Series</small></div><div class="sp">45 seg<small>Mantener</small></div><div class="sp">45 seg<small>Descanso</small></div></div>
+      <div class="ex-tip"><strong>Tip:</strong> Activa el transverso — el músculo profundo que aplana el abdomen y protege la espalda.</div>
+    </div>
+  </div>
+</div>
+
+<!-- PECHO -->
+<div class="panel" id="panel-pecho">
+  <div class="zone-hero">
+    <div class="zh-icon ic-navy">🏋️</div>
+    <div class="zh-text"><h3>Pecho Definido</h3><p>Tonifica el pectoral y reduce la grasa. Sin banco — suelo y silla.</p>
+      <div class="zh-chips"><span class="chip c-navy">Mancuernas</span><span class="chip c-red">Sin banco</span><span class="chip c-gray">45 min</span></div>
+    </div>
+  </div>
+  <div class="warmup">
+    <div class="wm-head">⚡ Calentamiento — 4 min</div>
+    <div class="wm-list">
+      <div class="wm-item">Rotación de hombros 30 seg</div>
+      <div class="wm-item">Lagartijas lentas x 8</div>
+      <div class="wm-item">Apertura de brazos 30 seg</div>
+      <div class="wm-item">Jumping Jacks x 20</div>
+    </div>
+  </div>
+  <div class="note-box"><strong>💡 Sobre la grasa del pecho:</strong> Los pectorales están debajo de la grasa. Ejercitarlos los define, pero la grasa baja con déficit calórico general. Combina con el cardio de abdomen para mejores resultados.</div>
+  <div class="ex-card" onclick="toggleEx(this)">
+    <div class="ex-top">
+      <div class="ex-num en-navy">P1</div>
+      <div class="ex-info"><div class="ex-name">Press de Pecho en el Suelo</div><div class="ex-sub">Tumbado · Mancuernas · Pecho completo</div></div>
+      <div class="ex-pill"><div class="ep-main">4×12</div><div class="ep-label">s×reps</div></div>
+      <div class="ex-arrow">▼</div>
+    </div>
+    <div class="ex-body">
+      <div class="ex-how">Acuéstate boca arriba, rodillas dobladas. Mancuernas a la altura del pecho, codos a 45°. Empuja hacia arriba. Baja hasta que los codos toquen el suelo suavemente — sin rebotar.</div>
+      <div class="series-row"><div class="sp">4<small>Series</small></div><div class="sp">12<small>Reps</small></div><div class="sp">60 seg<small>Descanso</small></div></div>
+      <div class="ex-tip"><strong>Tip:</strong> El suelo es tu tope natural. No rebotes — mantén tensión en el pecho durante todo el recorrido.</div>
+    </div>
+  </div>
+  <div class="ex-card" onclick="toggleEx(this)">
+    <div class="ex-top">
+      <div class="ex-num en-navy">P2</div>
+      <div class="ex-info"><div class="ex-name">Aperturas (Flyes) en el Suelo</div><div class="ex-sub">Tumbado · Mancuernas · Amplitud</div></div>
+      <div class="ex-pill"><div class="ep-main">3×15</div><div class="ep-label">s×reps</div></div>
+      <div class="ex-arrow">▼</div>
+    </div>
+    <div class="ex-body">
+      <div class="ex-how">Acuéstate, mancuernas arriba con palmas enfrentadas. Abre los brazos en arco hasta que toquen el suelo. Sube cerrando como si abrazaras un árbol grande.</div>
+      <div class="series-row"><div class="sp">3<small>Series</small></div><div class="sp">15<small>Reps</small></div><div class="sp">50 seg<small>Descanso</small></div></div>
+      <div class="ex-tip"><strong>Tip:</strong> Usa peso ligero. El objetivo es SENTIR el estiramiento del pecho, no levantar mucho.</div>
+    </div>
+  </div>
+  <div class="ex-card" onclick="toggleEx(this)">
+    <div class="ex-top">
+      <div class="ex-num en-navy">P3</div>
+      <div class="ex-info"><div class="ex-name">Lagartijas Inclinadas <span class="badge-nd">Sin mancuernas</span></div><div class="ex-sub">Con silla · Pecho superior</div></div>
+      <div class="ex-pill"><div class="ep-main">4×12</div><div class="ep-label">s×reps</div></div>
+      <div class="ex-arrow">▼</div>
+    </div>
+    <div class="ex-body">
+      <div class="ex-how">Apoya las manos en el borde de una silla o mesa baja. Cuerpo recto. Baja el pecho hacia las manos doblando los codos y sube. La inclinación trabaja la parte superior del pecho.</div>
+      <div class="series-row"><div class="sp">4<small>Series</small></div><div class="sp">12<small>Reps</small></div><div class="sp">60 seg<small>Descanso</small></div></div>
+      <div class="ex-tip"><strong>Tip:</strong> Cuanto más baja la superficie, más difícil. Empieza con mesa alta y progresa.</div>
+    </div>
+  </div>
+  <div class="ex-card" onclick="toggleEx(this)">
+    <div class="ex-top">
+      <div class="ex-num en-navy">P4</div>
+      <div class="ex-info"><div class="ex-name">Pull-Over con Mancuerna</div><div class="ex-sub">Tumbado · Mancuerna · Expansión torácica</div></div>
+      <div class="ex-pill"><div class="ep-main">3×12</div><div class="ep-label">s×reps</div></div>
+      <div class="ex-arrow">▼</div>
+    </div>
+    <div class="ex-body">
+      <div class="ex-how">Acuéstate, sostén una mancuerna con ambas manos sobre el pecho. Baja los brazos (ligeramente doblados) por detrás de la cabeza hasta sentir el estiramiento. Vuelve arriba.</div>
+      <div class="series-row"><div class="sp">3<small>Series</small></div><div class="sp">12<small>Reps</small></div><div class="sp">50 seg<small>Descanso</small></div></div>
+      <div class="ex-tip"><strong>Tip:</strong> Da apariencia de pecho más amplio. Excelente para la forma general del torso.</div>
+    </div>
+  </div>
+  <div class="ex-card" onclick="toggleEx(this)">
+    <div class="ex-top">
+      <div class="ex-num en-navy">P5</div>
+      <div class="ex-info"><div class="ex-name">Lagartijas Diamond <span class="badge-nd">Sin mancuernas</span></div><div class="ex-sub">En suelo · Pecho interno + tríceps</div></div>
+      <div class="ex-pill"><div class="ep-main">3×10</div><div class="ep-label">s×reps</div></div>
+      <div class="ex-arrow">▼</div>
+    </div>
+    <div class="ex-body">
+      <div class="ex-how">Lagartija con las manos juntas formando un rombo con pulgares e índices. Baja el pecho hacia las manos. Trabaja el pecho interno y el tríceps con alta intensidad.</div>
+      <div class="series-row"><div class="sp">3<small>Series</small></div><div class="sp">10<small>Reps</small></div><div class="sp">60 seg<small>Descanso</small></div></div>
+      <div class="ex-tip"><strong>Tip:</strong> Es difícil — si no puedes hacerlo completo, apoya las rodillas al inicio.</div>
+    </div>
+  </div>
+</div>
+
+<!-- PAPADA -->
+<div class="panel" id="panel-papada">
+  <div class="zone-hero">
+    <div class="zh-icon ic-amber">✨</div>
+    <div class="zh-text"><h3>Reducir Papada</h3><p>Tonifica cuello, mandíbula y platisma. Solo 5 min diarios.</p>
+      <div class="zh-chips"><span class="chip c-amber">Sin equipamiento</span><span class="chip c-gray">Diario</span></div>
+    </div>
+  </div>
+  <div class="note-box"><strong>⚠️ Expectativas realistas:</strong> Estos ejercicios tonifican los músculos de cuello y mandíbula. La reducción de grasa real requiere pérdida de peso general. Con constancia verás resultados en 6–10 semanas.</div>
+  <div class="pa-card">
+    <div class="pa-top"><div class="pa-num">1</div><div class="pa-title-txt">Chin Tuck — Retracción de Mentón</div><div class="pa-reps-badge">3×15</div></div>
+    <div class="pa-desc">Sentado derecho. Sin mover los hombros, empuja la barbilla hacia atrás (como si crearas una "papada doble"). Mantén 2 segundos y regresa. Fortalece los músculos profundos del cuello.</div>
+    <div class="pa-tip">💡 El ejercicio más respaldado científicamente para tonificar la zona submental.</div>
+  </div>
+  <div class="pa-card">
+    <div class="pa-top"><div class="pa-num">2</div><div class="pa-title-txt">Tongue Press — Lengua al Techo</div><div class="pa-reps-badge">3×10</div></div>
+    <div class="pa-desc">Inclina la cabeza hacia el techo. Presiona la lengua firmemente contra el paladar. Mantén 5–10 segundos. Sentirás tensión en toda la zona debajo del mentón — eso es el platisma activándose.</div>
+    <div class="pa-tip">💡 Activa directamente el músculo platisma, responsable del aspecto de la papada.</div>
+  </div>
+  <div class="pa-card">
+    <div class="pa-top"><div class="pa-num">3</div><div class="pa-title-txt">Masticación Exagerada</div><div class="pa-reps-badge">2×30s</div></div>
+    <div class="pa-desc">Con la boca cerrada, simula una masticación exagerada con amplitud máxima. También puedes hacerlo con chicle sin azúcar. Trabaja el masetero y músculos de la mandíbula.</div>
+    <div class="pa-tip">💡 Simple pero efectivo. Puedes hacerlo en cualquier momento del día.</div>
+  </div>
+  <div class="pa-card">
+    <div class="pa-top"><div class="pa-num">4</div><div class="pa-title-txt">Cuello Lateral Activo</div><div class="pa-reps-badge">3×10 c/lado</div></div>
+    <div class="pa-desc">Inclina la cabeza hacia el hombro. Mantén 3 segundos y vuelve con resistencia activa (como si alguien te empujara desde el lado). Repite al otro lado. Tonifica los músculos laterales del cuello.</div>
+    <div class="pa-tip">💡 Mejora también la postura — que a su vez hace menos visible la papada.</div>
+  </div>
+  <div class="pa-card">
+    <div class="pa-top"><div class="pa-num">5</div><div class="pa-title-txt">Vocales Exageradas (A-E-I-O-U)</div><div class="pa-reps-badge">3×10</div></div>
+    <div class="pa-desc">Pronuncia en voz alta y exagerando al máximo cada vocal. Abre la boca tanto como puedas en cada letra. Trabajas más de 20 músculos faciales y cervicales simultáneamente.</div>
+    <div class="pa-tip">💡 Puede sentirse ridículo — funciona. Ideal para hacerlo en el baño por las mañanas.</div>
+  </div>
+  <div class="pa-card">
+    <div class="pa-top"><div class="pa-num">6</div><div class="pa-title-txt">Cuello hacia Atrás Resistido</div><div class="pa-reps-badge">3×10</div></div>
+    <div class="pa-desc">Sentado derecho, coloca ambas manos en la frente. Intenta inclinar la cabeza hacia atrás mientras las manos ofrecen resistencia. Mantén 5 segundos. Activa la musculatura cervical anterior.</div>
+    <div class="pa-tip">💡 La resistencia isométrica es la forma más eficiente de fortalecer los músculos del cuello.</div>
+  </div>
+  <div class="comp-list">
+    <div class="comp-title">🧴 Complementos que ayudan</div>
+    <div class="comp-row"><div class="comp-dot"></div><div><strong>Postura:</strong> Cabeza erguida y barbilla paralela al suelo. La postura encorvada hace más visible la papada.</div></div>
+    <div class="comp-row"><div class="comp-dot"></div><div><strong>Hidratación:</strong> 2.5–3 litros diarios reduce retención de líquidos en cuello y cara.</div></div>
+    <div class="comp-row"><div class="comp-dot"></div><div><strong>Sal:</strong> Reducir el sodio disminuye la inflamación y retención facial.</div></div>
+    <div class="comp-row"><div class="comp-dot"></div><div><strong>Masaje:</strong> Masajea la zona con movimientos hacia arriba 2 min al día para activar la circulación.</div></div>
+  </div>
+</div>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <button class="nav-item active" onclick="switchZone('plan')">
+    <div class="nav-icon">📅</div><div class="nav-label">Plan</div>
+  </button>
+  <button class="nav-item" onclick="switchZone('brazos')">
+    <div class="nav-icon">💪</div><div class="nav-label">Brazos</div>
+  </button>
+  <button class="nav-item" onclick="switchZone('abdomen')">
+    <div class="nav-icon">🔥</div><div class="nav-label">Abdomen</div>
+  </button>
+  <button class="nav-item" onclick="switchZone('pecho')">
+    <div class="nav-icon">🏋️</div><div class="nav-label">Pecho</div>
+  </button>
+  <button class="nav-item" onclick="switchZone('papada')">
+    <div class="nav-icon">✨</div><div class="nav-label">Papada</div>
+  </button>
+</nav>
+
+<script>
+const zones = ['plan','brazos','abdomen','pecho','papada'];
+function switchZone(zone) {
+  zones.forEach(z => document.getElementById('panel-'+z).classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-'+zone).classList.add('active');
+  document.querySelectorAll('.nav-item')[zones.indexOf(zone)].classList.add('active');
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+function toggleEx(card) {
+  const panel = card.closest('.panel');
+  panel.querySelectorAll('.ex-card.open').forEach(c => { if(c !== card) c.classList.remove('open'); });
+  card.classList.toggle('open');
+}
+</script>
+</body>
+</html>

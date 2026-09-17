@@ -230,8 +230,10 @@ body {
 .ex-card.done .ex-name{ text-decoration:line-through; color:var(--ink3); }
 
 /* TIMER BUTTONS */
-.timer-btn{ margin-top:0.85rem; width:100%; background:var(--surface); border:1.5px solid var(--border); color:var(--ink); font-family:'Plus Jakarta Sans', sans-serif; font-weight:700; font-size:0.85rem; padding:0.7rem; border-radius:10px; cursor:pointer; }
+.timer-row{ display:flex; gap:0.6rem; margin-top:0.85rem; flex-wrap:wrap; }
+.timer-btn{ flex:1; min-width:120px; background:var(--surface); border:1.5px solid var(--border); color:var(--ink); font-family:'Plus Jakarta Sans', sans-serif; font-weight:700; font-size:0.82rem; padding:0.7rem; border-radius:10px; cursor:pointer; }
 .timer-btn.timer-active{ background:var(--red); color:#fff; border-color:var(--red); }
+.timer-btn-rest.timer-active{ background:var(--navy); border-color:var(--navy); }
 .ct-row .ct-v{ cursor:pointer; transition:background .15s, color .15s; border-radius:6px; padding:2px 6px; }
 .ct-row .ct-v.timer-active{ background:var(--red); color:#fff; }
 
@@ -866,9 +868,13 @@ function startCountdown(el, seconds, originalLabel){
   }, 1000);
 }
 
-/* timer button for isometric holds (Plancha, etc.) */
+/* timer buttons: isometric hold ("Duración") + rest between sets ("Descanso") */
 document.querySelectorAll('.ex-card').forEach(card=>{
   const sps = Array.from(card.querySelectorAll('.sp'));
+  const body = card.querySelector('.ex-body');
+  const btnRow = document.createElement('div');
+  btnRow.className = 'timer-row';
+
   const durSp = sps.find(sp=>{
     const small = sp.querySelector('small');
     return small && /duraci[oó]n/i.test(small.textContent);
@@ -876,16 +882,34 @@ document.querySelectorAll('.ex-card').forEach(card=>{
   if(durSp){
     const seconds = parseInt(durSp.textContent);
     if(!isNaN(seconds)){
-      const body = card.querySelector('.ex-body');
       const btn = document.createElement('button');
       btn.type = 'button';
-      const label = '▶ Iniciar '+seconds+'s';
+      const label = '▶ Trabajo '+seconds+'s';
       btn.className = 'timer-btn';
       btn.textContent = label;
       btn.addEventListener('click', (e)=>{ e.stopPropagation(); startCountdown(btn, seconds, label); });
-      body.appendChild(btn);
+      btnRow.appendChild(btn);
     }
   }
+
+  const restSp = sps.find(sp=>{
+    const small = sp.querySelector('small');
+    return small && /descanso/i.test(small.textContent);
+  });
+  if(restSp){
+    const seconds = parseInt(restSp.textContent);
+    if(!isNaN(seconds)){
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      const label = '⏱ Descanso '+seconds+'s';
+      btn.className = 'timer-btn timer-btn-rest';
+      btn.textContent = label;
+      btn.addEventListener('click', (e)=>{ e.stopPropagation(); startCountdown(btn, seconds, label); });
+      btnRow.appendChild(btn);
+    }
+  }
+
+  if(btnRow.children.length){ body.appendChild(btnRow); }
 });
 
 /* tap-to-start timers on circuit rows */

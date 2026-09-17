@@ -18,8 +18,28 @@
   --teal: #0f8a77;
   --navy: #1d3d62;
   --amber: #d4860a;
+  --dark-panel: #18120e;
 }
-:root[data-theme="light"]{ }
+:root[data-theme="dark"]{
+  --bg: #15181b;
+  --card: #1d2226;
+  --surface: #252b30;
+  --border: #333a40;
+  --ink: #f2f0ea;
+  --ink2: #b9c0c6;
+  --ink3: #8b939a;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg: #15181b;
+    --card: #1d2226;
+    --surface: #252b30;
+    --border: #333a40;
+    --ink: #f2f0ea;
+    --ink2: #b9c0c6;
+    --ink3: #8b939a;
+  }
+}
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 html { scroll-behavior: smooth; }
 body {
@@ -33,7 +53,7 @@ body {
   overflow-x: hidden;
 }
 .app-header {
-  background: var(--ink);
+  background: var(--dark-panel);
   padding: 3rem 1.25rem 0;
   position: relative; overflow: hidden;
 }
@@ -96,7 +116,7 @@ body {
 .wd-ico { font-size: 1.25rem; line-height: 1; }
 .wd-lbl { font-size: 0.58rem; color: var(--ink2); margin-top: 0.3rem; line-height: 1.3; font-weight: 600; }
 .wd.rest { opacity: 0.55; }
-.wd.active { border-color: var(--ink); background: var(--ink); }
+.wd.active { border-color: var(--dark-panel); background: var(--dark-panel); }
 .wd.active .wd-day { color: rgba(255,255,255,0.5); }
 .wd.active .wd-lbl { color: #fff; }
 .wd.d-push { border-top: 3px solid var(--red); }
@@ -149,7 +169,7 @@ body {
 }
 .ex-card.open { box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
 .ex-top {
-  display: flex; align-items: center; gap: 0.9rem;
+  display: flex; align-items: flex-start; gap: 0.9rem;
   padding: 1.1rem 1.1rem; cursor: pointer; user-select: none;
 }
 .ex-num { width: 44px; height: 44px; border-radius: 13px; display: flex; align-items: center; justify-content: center; font-family: 'Syne', sans-serif; font-size: 0.88rem; font-weight: 800; flex-shrink: 0; }
@@ -158,8 +178,8 @@ body {
 .en-navy { background: #dde7f5; color: var(--navy); }
 .en-amber { background: #fdf0d5; color: var(--amber); }
 .ex-info { flex: 1; min-width: 0; }
-.ex-name { font-family: 'Syne', sans-serif; font-size: 0.95rem; font-weight: 700; line-height: 1.3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.ex-sub { font-size: 0.75rem; color: var(--ink3); margin-top: 0.2rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ex-name { font-family: 'Syne', sans-serif; font-size: 0.95rem; font-weight: 700; line-height: 1.3; }
+.ex-sub { font-size: 0.75rem; color: var(--ink3); margin-top: 0.2rem; line-height: 1.35; }
 .ex-pill { background: var(--surface); border-radius: 10px; padding: 0.4rem 0.7rem; text-align: center; flex-shrink: 0; min-width: 52px; }
 .ep-main { font-family: 'Syne', sans-serif; font-size: 0.92rem; font-weight: 800; color: var(--ink); line-height: 1; }
 .ep-label { font-size: 0.56rem; color: var(--ink3); text-transform: uppercase; letter-spacing: 0.05em; margin-top: 0.15rem; }
@@ -176,7 +196,7 @@ body {
 .badge-nd { display: inline-flex; align-items: center; background: #dcf5f0; color: var(--teal); font-size: 0.58rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.15rem 0.45rem; border-radius: 4px; margin-left: 0.35rem; vertical-align: middle; }
 
 /* CIRCUIT (cardio finisher) */
-.circuit { background: var(--ink); border-radius: 18px; padding: 1.2rem 1.25rem; margin-bottom: 1.1rem; color: #fff; }
+.circuit { background: var(--dark-panel); border-radius: 18px; padding: 1.2rem 1.25rem; margin-bottom: 1.1rem; color: #fff; }
 .ct-head { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 800; margin-bottom: 0.2rem; }
 .ct-meta { font-size: 0.72rem; color: rgba(255,255,255,0.38); text-transform: uppercase; letter-spacing: 0.09em; margin-bottom: 1rem; }
 .ct-items { display: flex; flex-direction: column; gap: 0.45rem; }
@@ -194,6 +214,35 @@ body {
 .comp-row { display: flex; align-items: flex-start; gap: 0.65rem; font-size: 0.86rem; color: var(--ink2); line-height: 1.6; margin-bottom: 0.6rem; }
 .comp-row:last-child { margin-bottom: 0; }
 .comp-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--amber); flex-shrink: 0; margin-top: 0.5rem; }
+
+/* PROGRESS BAR */
+.progress-row{ display:flex; align-items:center; gap:12px; margin:0 0 1.1rem; }
+.progress-track{ flex:1; height:6px; background:var(--surface); border-radius:99px; overflow:hidden; }
+.progress-fill{ height:100%; background:var(--red); width:0%; transition:width .3s ease; }
+.progress-label{ font-size:0.75rem; color:var(--ink3); flex:none; min-width:54px; text-align:right; font-weight:600; }
+
+/* CHECK BUTTON */
+.ex-check{ width:30px; height:30px; border-radius:8px; border:2px solid var(--border); background:transparent; cursor:pointer; flex-shrink:0; display:flex; align-items:center; justify-content:center; margin-top:0.1rem; }
+.ex-check svg{ width:15px; height:15px; opacity:0; }
+.ex-check.checked{ background:var(--red); border-color:var(--red); }
+.ex-check.checked svg{ opacity:1; }
+.ex-card.done{ opacity:0.6; }
+.ex-card.done .ex-name{ text-decoration:line-through; color:var(--ink3); }
+
+/* TIMER BUTTONS */
+.timer-btn{ margin-top:0.85rem; width:100%; background:var(--surface); border:1.5px solid var(--border); color:var(--ink); font-family:'Plus Jakarta Sans', sans-serif; font-weight:700; font-size:0.85rem; padding:0.7rem; border-radius:10px; cursor:pointer; }
+.timer-btn.timer-active{ background:var(--red); color:#fff; border-color:var(--red); }
+.ct-row .ct-v{ cursor:pointer; transition:background .15s, color .15s; border-radius:6px; padding:2px 6px; }
+.ct-row .ct-v.timer-active{ background:var(--red); color:#fff; }
+
+/* THEME TOGGLE */
+.theme-toggle{
+  position:fixed; bottom:18px; right:18px; z-index:60;
+  background:var(--card); border:1.5px solid var(--border); color:var(--ink);
+  border-radius:99px; padding:10px 14px; font-size:0.72rem; font-weight:700;
+  cursor:pointer; font-family:'Plus Jakarta Sans', sans-serif;
+  box-shadow:0 4px 14px rgba(0,0,0,0.15);
+}
 
 @media (max-width:380px){
   .app-header h1{ font-size: 2.3rem; }
@@ -718,6 +767,8 @@ body {
   <div class="note-box"><strong>Sobre bajar grasa:</strong> la constancia semanal importa más que cualquier sesión aislada. Este plan combina fuerza y cardio de forma sostenible — no necesitas entrenar los 7 días para ver resultados.</div>
 </div>
 
+<button class="theme-toggle" id="themeToggle" type="button">Modo oscuro</button>
+
 <script>
 const days = ['lun','mar','mie','jue','vie','sab','dom'];
 function switchDay(day) {
@@ -737,6 +788,136 @@ function toggleEx(card) {
   panel.querySelectorAll('.ex-card.open').forEach(c => { if(c !== card) c.classList.remove('open'); });
   card.classList.toggle('open');
 }
+
+/* ---------------- PROGRESS (checkboxes, saved per visitor) ---------------- */
+const STORAGE_KEY = 'rutina-semana-progress-v1';
+let progress = {};
+try{
+  const raw = localStorage.getItem(STORAGE_KEY);
+  progress = raw ? JSON.parse(raw) : {};
+}catch(e){ progress = {}; }
+function saveProgress(){
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(progress)); }catch(e){}
+}
+function updateProgress(panelId){
+  const panel = document.getElementById(panelId);
+  const cards = panel.querySelectorAll('.ex-card');
+  if(cards.length === 0) return;
+  let done = 0;
+  cards.forEach(c => { if(c.classList.contains('done')) done++; });
+  const fill = panel.querySelector('.progress-fill');
+  const label = panel.querySelector('.progress-label');
+  if(fill) fill.style.width = (done/cards.length*100)+'%';
+  if(label) label.textContent = done+' / '+cards.length;
+}
+
+document.querySelectorAll('.panel').forEach(panel=>{
+  const cards = panel.querySelectorAll('.ex-card');
+  if(cards.length === 0) return;
+  const bar = document.createElement('div');
+  bar.className = 'progress-row';
+  bar.innerHTML = '<div class="progress-track"><div class="progress-fill"></div></div><div class="progress-label">0 / '+cards.length+'</div>';
+  const hero = panel.querySelector('.zone-hero');
+  hero.insertAdjacentElement('afterend', bar);
+});
+
+document.querySelectorAll('.ex-card').forEach(card=>{
+  const panel = card.closest('.panel');
+  const numEl = card.querySelector('.ex-num');
+  const key = panel.id + '-' + (numEl ? numEl.textContent.trim() : card.querySelector('.ex-name').textContent.trim());
+  if(progress[key]){ card.classList.add('done'); }
+  const arrow = card.querySelector('.ex-arrow');
+  const check = document.createElement('button');
+  check.type = 'button';
+  check.className = 'ex-check' + (progress[key] ? ' checked' : '');
+  check.setAttribute('aria-label','Marcar ejercicio completado');
+  check.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"><path d="M4 12l5 5L20 6"/></svg>';
+  check.addEventListener('click', (e)=>{
+    e.stopPropagation();
+    progress[key] = !progress[key];
+    saveProgress();
+    card.classList.toggle('done', !!progress[key]);
+    check.classList.toggle('checked', !!progress[key]);
+    updateProgress(panel.id);
+  });
+  arrow.parentNode.insertBefore(check, arrow);
+});
+
+days.forEach(d => updateProgress('panel-'+d));
+
+/* ---------------- TIMERS ---------------- */
+function startCountdown(el, seconds, originalLabel){
+  if(el.dataset.running === '1') return;
+  let remaining = seconds;
+  el.dataset.running = '1';
+  el.classList.add('timer-active');
+  el.textContent = remaining+'s';
+  const iv = setInterval(()=>{
+    remaining -= 1;
+    if(remaining <= 0){
+      clearInterval(iv);
+      el.textContent = '✓ listo';
+      el.classList.remove('timer-active');
+      el.dataset.running = '0';
+      setTimeout(()=>{ el.textContent = originalLabel; }, 1400);
+    } else {
+      el.textContent = remaining+'s';
+    }
+  }, 1000);
+}
+
+/* timer button for isometric holds (Plancha, etc.) */
+document.querySelectorAll('.ex-card').forEach(card=>{
+  const sps = Array.from(card.querySelectorAll('.sp'));
+  const durSp = sps.find(sp=>{
+    const small = sp.querySelector('small');
+    return small && /duraci[oó]n/i.test(small.textContent);
+  });
+  if(durSp){
+    const seconds = parseInt(durSp.textContent);
+    if(!isNaN(seconds)){
+      const body = card.querySelector('.ex-body');
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      const label = '▶ Iniciar '+seconds+'s';
+      btn.className = 'timer-btn';
+      btn.textContent = label;
+      btn.addEventListener('click', (e)=>{ e.stopPropagation(); startCountdown(btn, seconds, label); });
+      body.appendChild(btn);
+    }
+  }
+});
+
+/* tap-to-start timers on circuit rows */
+document.querySelectorAll('.ct-row .ct-v').forEach(v=>{
+  const seconds = parseInt(v.textContent);
+  if(isNaN(seconds)) return;
+  const label = v.textContent;
+  v.addEventListener('click', (e)=>{ e.stopPropagation(); startCountdown(v, seconds, label); });
+});
+document.querySelectorAll('.ct-note').forEach(n=>{
+  n.textContent += ' Toca un tiempo del circuito para iniciar el cronómetro.';
+});
+
+/* ---------------- THEME TOGGLE ---------------- */
+const themeBtn = document.getElementById('themeToggle');
+let savedTheme = null;
+try{ savedTheme = localStorage.getItem('rutina-semana-theme'); }catch(e){}
+if(savedTheme === 'dark'){ document.documentElement.setAttribute('data-theme','dark'); themeBtn.textContent = 'Modo claro'; }
+else if(savedTheme === 'light'){ document.documentElement.setAttribute('data-theme','light'); themeBtn.textContent = 'Modo oscuro'; }
+themeBtn.addEventListener('click', ()=>{
+  const current = document.documentElement.getAttribute('data-theme');
+  const goingDark = current !== 'dark';
+  if(goingDark){
+    document.documentElement.setAttribute('data-theme','dark');
+    themeBtn.textContent = 'Modo claro';
+    try{ localStorage.setItem('rutina-semana-theme','dark'); }catch(e){}
+  } else {
+    document.documentElement.setAttribute('data-theme','light');
+    themeBtn.textContent = 'Modo oscuro';
+    try{ localStorage.setItem('rutina-semana-theme','light'); }catch(e){}
+  }
+});
 </script>
 </body>
 </html>

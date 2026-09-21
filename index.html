@@ -201,7 +201,8 @@ body {
 .ct-meta { font-size: 0.72rem; color: rgba(255,255,255,0.38); text-transform: uppercase; letter-spacing: 0.09em; margin-bottom: 1rem; }
 .ct-items { display: flex; flex-direction: column; gap: 0.45rem; }
 .ct-row { display: flex; align-items: center; justify-content: space-between; background: rgba(255,255,255,0.07); padding: 0.8rem 0.9rem; border-radius: 11px; font-size: 0.9rem; }
-.ct-v { font-family: 'Syne', sans-serif; font-size: 0.92rem; font-weight: 800; color: var(--red); }
+.ct-v { font-family: 'Syne', sans-serif; font-size: 0.88rem; font-weight: 800; color: var(--red); background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2); padding: 0.4rem 0.75rem; border-radius: 8px; display: inline-flex; align-items: center; gap: 0.35rem; }
+.ct-v::before{ content: '▶'; font-size: 0.55rem; }
 .ct-note { font-size: 0.72rem; color: rgba(255,255,255,0.27); margin-top: 0.8rem; }
 
 /* NOTE BOX */
@@ -234,8 +235,9 @@ body {
 .timer-btn{ flex:1; min-width:120px; background:var(--surface); border:1.5px solid var(--border); color:var(--ink); font-family:'Plus Jakarta Sans', sans-serif; font-weight:700; font-size:0.82rem; padding:0.7rem; border-radius:10px; cursor:pointer; }
 .timer-btn.timer-active{ background:var(--red); color:#fff; border-color:var(--red); }
 .timer-btn-rest.timer-active{ background:var(--navy); border-color:var(--navy); }
-.ct-row .ct-v{ cursor:pointer; transition:background .15s, color .15s; border-radius:6px; padding:2px 6px; }
-.ct-row .ct-v.timer-active{ background:var(--red); color:#fff; }
+.ct-row .ct-v{ cursor:pointer; transition:background .15s, color .15s; }
+.ct-row .ct-v.timer-active{ background:var(--red); color:#fff; border-color:var(--red); }
+.ct-row .ct-v.timer-active::before{ content:'⏱'; }
 
 /* THEME TOGGLE */
 .theme-toggle{

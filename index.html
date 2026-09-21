@@ -850,7 +850,27 @@ document.querySelectorAll('.ex-card').forEach(card=>{
 days.forEach(d => updateProgress('panel-'+d));
 
 /* ---------------- TIMERS ---------------- */
-function startCountdown(el, seconds, originalLabel){
+let audioCtx = null;
+function playBeep(){
+  try{
+    audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+    if(audioCtx.state === 'suspended'){ audioCtx.resume(); }
+    const now = audioCtx.currentTime;
+    [0, 0.18].forEach(offset=>{
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = 880;
+      gain.gain.setValueAtTime(0.0001, now + offset);
+      gain.gain.exponentialRampToValueAtTime(0.35, now + offset + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + offset + 0.16);
+      osc.connect(gain); gain.connect(audioCtx.destination);
+      osc.start(now + offset);
+      osc.stop(now + offset + 0.18);
+    });
+  }catch(e){}
+}
+function startCountdown(el, seconds, originalLabel, playSound){
   if(el.dataset.running === '1') return;
   let remaining = seconds;
   el.dataset.running = '1';
@@ -863,6 +883,7 @@ function startCountdown(el, seconds, originalLabel){
       el.textContent = '✓ listo';
       el.classList.remove('timer-active');
       el.dataset.running = '0';
+      if(playSound){ playBeep(); }
       setTimeout(()=>{ el.textContent = originalLabel; }, 1400);
     } else {
       el.textContent = remaining+'s';
@@ -889,7 +910,7 @@ document.querySelectorAll('.ex-card').forEach(card=>{
       const label = '▶ Trabajo '+seconds+'s';
       btn.className = 'timer-btn';
       btn.textContent = label;
-      btn.addEventListener('click', (e)=>{ e.stopPropagation(); startCountdown(btn, seconds, label); });
+      btn.addEventListener('click', (e)=>{ e.stopPropagation(); startCountdown(btn, seconds, label, true); });
       btnRow.appendChild(btn);
     }
   }
@@ -906,7 +927,7 @@ document.querySelectorAll('.ex-card').forEach(card=>{
       const label = '⏱ Descanso '+seconds+'s';
       btn.className = 'timer-btn timer-btn-rest';
       btn.textContent = label;
-      btn.addEventListener('click', (e)=>{ e.stopPropagation(); startCountdown(btn, seconds, label); });
+      btn.addEventListener('click', (e)=>{ e.stopPropagation(); startCountdown(btn, seconds, label, false); });
       btnRow.appendChild(btn);
     }
   }
@@ -914,12 +935,16 @@ document.querySelectorAll('.ex-card').forEach(card=>{
   if(btnRow.children.length){ body.appendChild(btnRow); }
 });
 
-/* tap-to-start timers on circuit rows */
-document.querySelectorAll('.ct-row .ct-v').forEach(v=>{
+/* tap-to-start timers on circuit rows — sound only on work intervals, not on "Descanso" rows */
+document.querySelectorAll('.ct-row').forEach(row=>{
+  const label0 = row.querySelector('span:first-child');
+  const v = row.querySelector('.ct-v');
+  if(!v) return;
   const seconds = parseInt(v.textContent);
   if(isNaN(seconds)) return;
   const label = v.textContent;
-  v.addEventListener('click', (e)=>{ e.stopPropagation(); startCountdown(v, seconds, label); });
+  const isRest = label0 && /descanso/i.test(label0.textContent);
+  v.addEventListener('click', (e)=>{ e.stopPropagation(); startCountdown(v, seconds, label, !isRest); });
 });
 document.querySelectorAll('.ct-note').forEach(n=>{
   n.textContent += ' Toca un tiempo del circuito para iniciar el cronómetro.';
